@@ -3,6 +3,12 @@
 export PATH="$HOME/gcc/bin:$HOME/clang/bin:$PATH"
 export ARCH=arm64
 
+export CCACHE="$(which ccache)"
+export CCACHE_COMPRESS="1"
+export USE_CCACHE="1"
+ccache -M 50G
+ccache -s
+
 BUILD_CROSS_COMPILE=aarch64-linux-android-
 
 KERNEL_LLVM_BIN=clang
@@ -20,7 +26,7 @@ KERNEL_MAKE_ENV="DTC_EXT=$(pwd)/tools/dtc CONFIG_BUILD_ARM64_DT_OVERLAY=y"
 
 touch .scmversion
 
-make O=out -j$(nproc) $KERNEL_MAKE_ENV CROSS_COMPILE=$BUILD_CROSS_COMPILE REAL_CC=$KERNEL_LLVM_BIN CLANG_TRIPLE=$CLANG_TRIPLE CFP_CC=$KERNEL_LLVM_BIN sm7150_sec_a71_eur_open_defconfig
-make O=out -j$(nproc) $KERNEL_MAKE_ENV CROSS_COMPILE=$BUILD_CROSS_COMPILE REAL_CC=$KERNEL_LLVM_BIN CLANG_TRIPLE=$CLANG_TRIPLE CFP_CC=$KERNEL_LLVM_BIN
+make O=out -j$(nproc) $KERNEL_MAKE_ENV CROSS_COMPILE=$BUILD_CROSS_COMPILE CC="${CCACHE} $KERNEL_LLVM_BIN" REAL_CC="${CCACHE} $KERNEL_LLVM_BIN" CLANG_TRIPLE=$CLANG_TRIPLE CFP_CC=$KERNEL_LLVM_BIN sm7150_sec_a71_eur_open_defconfig
+make O=out -j$(nproc) $KERNEL_MAKE_ENV CROSS_COMPILE=$BUILD_CROSS_COMPILE CC="${CCACHE} $KERNEL_LLVM_BIN" REAL_CC="${CCACHE} $KERNEL_LLVM_BIN" CLANG_TRIPLE=$CLANG_TRIPLE CFP_CC=$KERNEL_LLVM_BIN
 $(pwd)/tools/mkdtimg create out/arch/arm64/boot/dtbo.img --page_size=4096 $(find out/arch -name "*.dtbo")
 
