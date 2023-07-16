@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-export PATH="$HOME/gcc/bin:$HOME/proton-clang/bin:$PATH"
+export PATH="$(pwd)/gcc/bin:$(pwd)/proton-clang/bin:$PATH"
 export ARCH=arm64
 
 export CCACHE="$(which ccache)"
