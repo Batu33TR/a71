@@ -3,3 +3,5 @@ gcc/
 proton-clang/
 
 .wireguard-fetch-lock
+
+KernelSU/
